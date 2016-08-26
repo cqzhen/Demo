@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+  <head>
+    <title>测试刮刮卡</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+  </head>
+  <style type="text/css">
+    p {
+      text-align: center;
+      font-size: 18px;
+    }
+    .canvas-container {
+      width: 300px;
+      margin: 0 auto;
+    }
+    #mycanvas {
+      border: solid 1px gray;
+      background-image: url("http://www.helloweba.com/demo/guaguaka/p_1.jpg");
+    }
+  </style>
+  <body>
+    <p>刮刮卡</p>
+    <div class="canvas-container">
+      <canvas id="mycanvas" width="320px" height="160px">
+      </canvas>
+    </div>
+    <script type="text/javascript">
+      var canvasTest = document.getElementById('mycanvas');
+      var canvasWidth = canvasTest.width,
+          canvasHeight = canvasTest.height,
+          offsetX = canvasTest.offsetLeft,
+          offsetY = canvasTest.offsetTop,
+          canvas = canvasTest.getContext('2d');
+      canvasTest.style.backgroundColor = 'transparent';
+      canvasTest.style.position = 'absolute';
+      // 初始化当前焦点状态
+      var mousedown = false;
+      // draw the shadow
+      (function drawShadow() {
+        canvas.fillStyle = 'gray';
+        canvas.fillRect(0, 0, canvasWidth, canvasHeight);
+      })();
+
+      // 按下去监听事件回调
+      function eventDown(e) {
+        e.preventDefault();
+        mousedown = true;
+      }
+
+      // 按下并移动监听事件回调
+      function eventMove(e) {
+        e.preventDefault();
+        if(mousedown) {
+          if(e.changedTouches) {
+            e = e.changedTouches[e.changedTouches.length - 1];
+          }
+          var x = (e.clientX + document.body.scrollLeft || e.pageX) - offsetX || 0,
+              y = (e.clientY + document.body.scrollTop || e.pageY) - offsetY || 0;
+          with(canvas) {
+            beginPath();
+            arc(x, y, 5, 0, Math.PI * 2);
+            fill();
+          }
+        }
+      }
+
+      // 终止
+      function eventUp(e) {
+        e.preventDefault();
+        mousedown = false;
+      }
+
+      // 设置或返回新图像如何绘制到已有的图像上
+      canvas.globalCompositeOperation = 'destination-out';
+      // 监听事件
+      // mouseDown
+      canvasTest.addEventListener('mousedown', eventDown);
+      // mouseMove
+      canvasTest.addEventListener('mousemove', eventMove);
+      // mouseUp
+      canvasTest.addEventListener('mouseup', eventUp);
+      // touchStart
+      canvasTest.addEventListener('touchstart', eventDown);
+      // touchMove
+      canvasTest.addEventListener('touchmove', eventMove);
+      // touchEnd
+      canvasTest.addEventListener('touchend', eventUp);
+
+      // GOTO 监听源图像的某个区域百分比，然后控制内容显示全部
+
+    </script>
+  </body>
+</html>

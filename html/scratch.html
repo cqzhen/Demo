@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+  <head>
+    <title>刮刮卡</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+  </head>
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 100%;
+    }
+    .canvas-container {
+      width: 300px;
+      height: 200px;
+      margin: 0 auto;
+    }
+    .canvas-containerT {
+      width: 300px;
+      height: 100px;
+      padding: 50px 0;
+      position: absolute;
+    }
+    .canvas-text {
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      margin-top: 25px;
+    }
+    .canvas-button {
+      height: 50px;
+      line-height: 50px;
+      width: 100px;
+      text-align: center;
+      background-color: #288c79;
+      border-radius: 5px;
+      margin: 0 auto;
+      display: none;
+    }
+    canvas {
+      position: absolute;
+    }
+    p {
+      width: 100%;
+      text-align: center;
+      line-height: 30px;
+    }
+  </style>
+  <body>
+    <p>刮刮卡</p>
+    <div class="canvas-container">
+      <div class="canvas-containerT">
+        <div class="canvas-text">恭喜您，中奖了!</div>
+        <div class="canvas-button">领取</div>
+      </div>
+      <canvas id="mycanvas" width="300px" height="200px"></canvas>
+    </div>
+  <body>
+  <script type="text/javascript">
+    var canvas = document.getElementById('mycanvas');
+    var areaWidth = canvas.width; // (document.body.clientWidth - canvas.width) / 2 + 100;
+    var areaHeight = canvas.height; // 30 + 50;
+    var cxt = canvas.getContext('2d');
+    cxt.fillStyle = 'gray';
+    cxt.fillRect(0, 0, 300, 200);
+
+    cxt.shadowColor = "red";
+    cxt.shadowBlur = 10;
+    cxt.globalCompositeOperation = 'destination-out';
+    cxt.lineCap = 'round';
+
+    var oldPoint = {};
+
+    canvas.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      for (var i = 0; i < e.changedTouches.length; i++) {
+        var touch = e.changedTouches[i];
+        oldPoint[touch.identifier] = {
+          x: touch.clientX - (document.body.clientWidth - canvas.width) / 2,
+          y: touch.clientY - 30
+        }
+      }
+    });
+
+    canvas.addEventListener('touchmove', function(e) {
+      console.log(567);
+      e.preventDefault();
+      for (var i = 0; i < e.changedTouches.length; i++) {
+        var touch = e.changedTouches[i];
+        if (touch.radiusX == null) {
+          if (touch.webkitRadiusX !== null) {
+            touch.radiusX = touch.webkitRadiusX;
+            touch.radiusY = touch.webkitRadiusY;
+          } else {
+            touch.radiusX = 12;
+            touch.radiusY = 12;
+          }
+        }
+        with(cxt) {
+          var lastX = touch.clientX - (document.body.clientWidth - canvas.width) / 2,
+              lastY = touch.clientY - 30;
+          lineWidth = touch.radiusX + touch.radiusY;
+          beginPath();
+          var point = oldPoint[touch.identifier];
+          moveTo(point.x, point.y);
+          lineTo(lastX, lastY);
+          stroke();
+        }
+        // 每次移动point的x/y都会变化
+        point.x = lastX;
+        point.y = lastY;
+      }
+    });
+
+    ['touchend', 'touchcancel'].forEach(function (eventName) {
+      canvas.addEventListener(eventName, function (event) {
+        for (var i = 0; i < event.changedTouches.length; ++i) {
+          var touch = event.changedTouches[i];
+          delete oldPoint[touch.identifier];
+        }
+        var silverCount = 0;
+        for (var wp = 100; wp < 200; wp += 20) {
+          for (var hp = 95; hp < 110; hp += 10) {
+            var imageData = cxt.getImageData(wp, hp, 1, 1).data;
+            if(imageData[0] !== 0 && imageData[1] !== 0 && imageData[2] !== 0 && imageData[3] !== 0) {
+              ++silverCount;
+            }
+          }
+        }
+        if (silverCount < 10) {
+          document.querySelector('.canvas-container').style.background = '#f1ebc5';
+    			document.querySelector('canvas').style.display = 'none';
+          document.querySelector('.canvas-button').style.display = 'block';
+          document.querySelector('.canvas-text').style.marginTop = 0;
+        }
+      })
+    });
+  </script>
+</html>
