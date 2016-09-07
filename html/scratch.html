@@ -60,6 +60,8 @@
   <body>
   <script type="text/javascript">
     var canvas = document.getElementById('mycanvas');
+    var canvasX = canvas.getBoundingClientRect().left;
+    var canvasY = canvas.getBoundingClientRect().top;
     var areaWidth = canvas.width; // (document.body.clientWidth - canvas.width) / 2 + 100;
     var areaHeight = canvas.height; // 30 + 50;
     var cxt = canvas.getContext('2d');
@@ -78,8 +80,8 @@
       for (var i = 0; i < e.changedTouches.length; i++) {
         var touch = e.changedTouches[i];
         oldPoint[touch.identifier] = {
-          x: touch.clientX - (document.body.clientWidth - canvas.width) / 2,
-          y: touch.clientY - 30
+          x: touch.clientX - canvasX,
+          y: touch.clientY - canvasY
         }
       }
     });
@@ -99,8 +101,8 @@
           }
         }
         with(cxt) {
-          var lastX = touch.clientX - (document.body.clientWidth - canvas.width) / 2,
-              lastY = touch.clientY - 30;
+          var lastX = touch.clientX - canvasX,
+              lastY = touch.clientY - canvasY;
           lineWidth = touch.radiusX + touch.radiusY;
           beginPath();
           var point = oldPoint[touch.identifier];

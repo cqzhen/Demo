@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+  <head>
+    <title>菜单栏点击效果</title>
+    <meta charset="utf-8" />
+  </head>
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    ul {
+      list-style: none;
+      width: 300px;
+      margin: 40px auto;
+      user-select: none;
+      font-size: 0;
+      position: relative;
+      border: solid 1px white;
+      -webkit-animation-timing-function: ease-in-out;
+      -webkit-animation-name: transitionBorder;
+      -webkit-animation-duration: 2s;
+      -webkit-animation-iteration-count: infinite;
+      -webkit-animation-direction: alternate;
+      animation: ease-in-out transitionBorder 2s infinite alternate;
+    }
+    li {
+      width: 100px;
+      height: 50px;
+      background: lightsalmon;
+      display: inline-block;
+      line-height: 50px;
+      text-align: center;
+      font-size: 16px;
+      color: #fff;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .ball {
+      left: 0;
+      bottom: 0;
+      background: #7dd1ef;
+      position: absolute;
+      height: 3px;
+      transition: all .3s;
+    }
+    .corrugated {
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.66);
+      -webkit-transform: scale(0);
+      -ms-transform: scale(0);
+      transform: scale(0);
+      position: absolute;
+      opacity: 1;
+      display: block;
+    }
+    .corrugatedOPEN {
+      -webkit-animation: corrugatedGO .4s linear;
+      animation: corrugatedGO .4s linear;
+    }
+    @-webkit-keyframes
+      corrugatedGO {  100% {
+       -webkit-transform: scale(2);
+       transform: scale(2);
+       opacity: 0;
+      }
+    }
+    @keyframes
+      corrugatedGO {  100% {
+       -webkit-transform: scale(2);
+       transform: scale(2);
+       opacity: 0;
+      }
+    }
+    @-webkit-keyframes
+      transitionBorder { 0% {
+        border: solid 1px white;
+        box-shadow: 1px 1px 15px -1px #bfef97;
+      }
+      100% {
+        border: solid 1px #58716f;
+        box-shadow: 2px 3px 24px 5px #7ee02d;
+      }
+    }
+    @keyframes
+      transitionBorder { 0% {
+        border: solid 1px white;
+        box-shadow: 1px 1px 15px -1px #bfef97;
+      }
+      100% {
+        border: solid 1px #58716f;
+        box-shadow: 2px 3px 24px 5px #7ee02d;
+      }
+    }
+  </style>
+  <body>
+    <ul id="target">
+      <li index="0">早餐</li>
+      <li index="1">午餐</li>
+      <li index="2">晚餐</li>
+    </ul>
+    <script>
+      var ul = document.querySelector('#target');
+      var tpl = document.createElement('li');
+      tpl.classList.add('ball');
+      ul.appendChild(tpl);
+
+
+      document.querySelectorAll('li').forEach(function(item) {
+        item.addEventListener('click', function(target) {
+          target.preventDefault();
+          if (this.classList.contains('ball')) {
+            return;
+          }
+          var slider = document.querySelector('.ball');
+          var index = this.getAttribute('index');
+          console.log(index);
+          slider.style.left = index * this.getBoundingClientRect().width + 'px';
+
+          var corrugated = document.createElement('div');
+          corrugated.classList.add('corrugated');
+          var isCorrugated = ul.querySelector('.corrugated');
+
+          if (isCorrugated) {
+            isCorrugated.parentNode.removeChild(isCorrugated);
+          }
+
+          this.appendChild(corrugated);
+
+          corrugated = document.querySelector('.corrugated');
+
+          var posX = this.getBoundingClientRect().left,
+              posY = this.getBoundingClientRect().top,
+              buttonWidth = this.getBoundingClientRect().width,
+              buttonHeight = this.getBoundingClientRect().height;
+
+          if (buttonWidth >= buttonHeight) {
+            buttonHeight = buttonWidth;
+          } else {
+            buttonWidth = buttonHeight;
+          }
+
+          var x = target.pageX - posX - buttonWidth / 2;
+          var y = target.pageY - posY - buttonHeight / 2;
+          corrugated.style.width = buttonWidth + 'px';
+          corrugated.style.height = buttonHeight + 'px';
+          corrugated.style.left = x + 'px';
+          corrugated.style.top = y + 'px';
+          corrugated.classList.add('corrugatedOPEN')
+        });
+      });
+    </script>
+  </body>
+</html>
