@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+  <head>
+    <title>cube测试</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scal=1, width=device-width" />
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: #0c0c0c;
+    }
+    ul {
+      list-style: none;
+      font-size: 0;
+    }
+    h3 {
+      width: 100%;
+      text-align: center;
+      padding: 50px 0;
+      display: none;
+    }
+    #cube {
+      padding-top: 100px;
+    }
+    #cube-container {
+      width: 200px;
+      height: 200px;
+      position: relative;
+      margin: 0 auto;
+      transition: transform 2s linear;
+      -webkit-transition: -webkit-transform 2s linear;
+      -webkit-transform-style: preserve-3d;
+      transform: rotateX(-8deg) rotateY(15deg);
+      -webkit-transform: rotateX(-8deg) rotateY(15deg);
+    }
+    .face {
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      background: rgba(255, 255, 255, 0.72);
+      text-align: center;
+      line-height: 160px;
+      font-size: 20px;
+      border: solid 1px;
+    }
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    #cube .one  {
+      transform: rotateY(0deg) translateZ(80px);
+      -webkit-transform: rotateY(0deg) translateZ(80px);
+    }
+
+    #cube .two {
+      transform: rotateY(-90deg) translateZ(80px);
+      -webkittransform: rotateY(-90deg) translateZ(80px);
+    }
+
+    #cube .three {
+      transform: rotateY(180deg) translateZ(80px);
+      -webkit-transform: rotateY(180deg) translateZ(80px);
+    }
+
+    #cube .four {
+      transform: rotateY(-270deg) translateZ(80px);
+      -webkit-transform: rotateY(-270deg) translateZ(80px);
+    }
+
+    #cube .five {
+      transform: rotateX(-90deg) translateZ(-80px);
+      -webkit-transform: rotateX(-90deg) translateZ(-80px);
+    }
+
+    #cube .six {
+      transform: rotateX(-90deg) translateZ(80px);
+      -webkit-transform: rotateX(-90deg) translateZ(80px);
+    }
+
+
+  </style>
+  <body>
+    <h3>Cube</h3>
+    <div id="cube">
+      <div id="cube-container">
+        <div id="face-one" class="face one">
+          <img id="one-img" src="../picture/1.jpg" />
+        </div>
+        <div id="face-two" class="face two">
+          <img id="two-img" src="../picture/2.jpg" />
+        </div>
+        <div id="face-three" class="face three">
+          <img id="three-img" src="../picture/3.jpg" />
+        </div>
+        <div id="face-four" class="face four">
+          <img id="four-img" src="../picture/4.jpg" />
+        </div>
+        <div id="face-five" class="face five">
+          <img id="five-img" src="../picture/5.jpg" />
+        </div>
+        <div id="face-six" class="face six">
+          <img id="six-img" src="../picture/6.jpg" />
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      // http://paulrhayes.com/2009-07/animated-css3-cube-interface-using-3d-transforms/
+      var xAngle = 0, yAngle = 0;
+      document.addEventListener('keydown', function(e) {
+        switch(e.keyCode) {
+
+          case 37: // left
+            yAngle -= 45;
+            break;
+
+          case 38: // up
+            xAngle += 45;
+            break;
+
+          case 39: // right
+            yAngle += 45;
+            break;
+
+          case 40: // down
+            xAngle -= 45;
+            break;
+        };
+
+        document.querySelector('#cube-container').style.webkitTransform = "rotateX("+xAngle+"deg) rotateY("+yAngle+"deg)";
+      }, false);
+    </script>
+  </body>
+</html>
