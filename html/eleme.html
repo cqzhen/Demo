@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+  <head>
+    <title>eleme html</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scal=1" />
+  </head>
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
+    canvas {
+      position: absolute;
+      left: 50px;
+      top: 50px;
+    }
+    .canvas-container {
+      height: 600px;
+      width: 800px;
+    }
+    .canvas-bottom {
+      transform: scale(1.6,.5);
+      animation: ease-in-out eleScale .08s infinite alternate; /*eleScale .5s linear alternate;*/
+    }
+    @keyframes
+      eleScale { 0%{
+        transform: scale(1, 1);
+      }
+      100% {
+        transform: scale(1.6, .5);
+      }
+    }
+  </style>
+  <body>
+    <div class="canvas-container">
+      <canvas id="eleme" width="50px" height="50px"></canvas>
+    </div>
+    <script type="text/javascript">
+      window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+      var dataSourcePoint12 = 'M65.4363005,34.298604 L58.816535,38.5937987 C57.9136761,39.1792617 57.6571309,40.3852617 58.2440342,41.2881879 L62.542291,47.900953 C63.1282941,48.8029799 64.3363068,49.0601879 65.2391658,48.4747248 L68.5490485,46.3271275 C71.2801293,44.5545503 72.0569661,40.9068725 70.2827537,38.1783087 L68.1340754,34.8714765 C67.5471721,33.9685503 66.3400596,33.7122416 65.4363005,34.298604 M16.1046453,5.70300403 C-0.271937876,16.3285745 -4.92755753,38.2065477 5.70871506,54.5689369 C16.3431873,70.9304268 38.2413426,75.579957 54.618826,64.9543866 C55.5666929,64.3392456 56.4740526,63.6836349 57.3418054,62.9956483 C57.3418054,62.994749 57.3427055,62.994749 57.3427055,62.994749 C58.1114409,62.3769101 58.3031746,61.2653396 57.7576786,60.4208698 C57.7558783,60.4190711 57.7558783,60.4181718 57.7549781,60.4163732 C57.754078,60.4154738 57.7522777,60.4136752 57.7513775,60.4118765 L56.1193902,57.9009503 C54.5909211,55.5492054 51.4502681,54.8747087 49.0891525,56.3837826 C49.0792507,56.3900779 49.069349,56.3945745 49.0594472,56.4008698 C49.0495455,56.4080644 49.0405439,56.4152591 49.0315423,56.4215544 C37.3834916,63.9561315 21.8260526,60.645702 14.2665217,49.0155812 C6.7006897,37.3755678 10.0123727,21.8117826 21.6622238,14.2529235 C31.0841826,8.14018523 43.0733933,9.13484295 51.3179448,15.8959973 C51.4592697,16.0156081 51.5861921,16.1568027 51.6915106,16.3195812 C52.2775138,17.2216081 52.0218688,18.4285074 51.1190098,19.0148698 L30.0607024,32.6774738 C27.6959861,34.2117289 27.0244678,37.3692725 28.5601382,39.7318094 L30.2776406,42.3749369 C30.8645439,43.2769638 32.0725566,43.5332725 32.9754155,42.9478094 L66.0292349,21.5024134 C66.8681826,20.9574201 67.149032,19.8782255 66.7151556,19.0049772 C66.7016532,18.9788966 66.6881509,18.9528161 66.6746485,18.9267356 C66.1705597,17.965353 65.6187626,17.0183597 65.0156564,16.089353 C54.3793838,-0.272136913 32.4812285,-4.92256644 16.1046453,5.70300403';
+      var canvasLogo = document.createElement('canvas');  // canvasE
+      var ctxC = canvasLogo.getContext('2d');
+      ctxC.width = 50;
+      ctxC.height = 50;
+      ctxC.fillStyle = '#1056d6';
+      ctxC.scale(.7, .7);
+      ctxC.fill(new Path2D(dataSourcePoint12));
+
+      var canvas = document.querySelector('#eleme');
+      var canvasRect = canvas.getBoundingClientRect();
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(canvasLogo, 0, 0);
+
+      var container = document.querySelector('.canvas-container').getBoundingClientRect();
+
+
+      function downElement() {
+        var canvasClient = canvas.getBoundingClientRect();
+        var bottom = canvasClient.bottom;
+        var top = canvasClient.top;
+        // if (bottom < container.height) {
+        //   canvas.style.top = top + 1 + 'px';
+        //   requestAnimationFrame(downElement);
+        // } else if(bottom = container.height) {
+        //   canvas.classList.add('canvas-bottom');
+        //   requestAnimationFrame(downElement);
+        // } else {
+        //   canvas.classList.add('canvas-bottom');
+        // }
+      }
+
+      // function setuBall() {
+	    //   var ballY = document.querySelector('#eleme').offsetTop;
+	    //   if (ballY < 600 - 30) {
+	    //   	document.querySelector('#eleme').style.top = ballY + 1 + 'px';
+	    //   	requestAnimationFrame(setuBall);
+	    //   }
+	    // }
+      var peleY = 0,
+        ptimeT = 0,
+        ptimePast = + new Date(),
+        pg = 9.8,
+        pxV = 3;
+        pV = 0;
+
+      function setpBall() {
+
+	    	ptimeT = ptimeT + ((+ new Date()) - ptimePast) / 1000;
+	    	peleY = ptimeT * pg * (+ new Date() - ptimePast) / 1000 / 2; // eleY + 0.98;
+	    	var ball = document.querySelector('#eleme'),
+	    	    ballY = ball.offsetTop,
+	    	    ballX = ball.offsetLeft;
+	    	if (ballY < 600 - 30) {
+	    		peleY = ballY + peleY > 600 -30 ? 600 -30 - ballY : peleY;
+	    		ball.style.top = ballY + peleY + 'px';
+	    		ball.style.left = ballX + pxV + 'px';
+	    		requestAnimationFrame(setpBall);
+	    	} else {
+	    		pV = pg * ptimeT;
+	    		// pxV = pxV - 0.25;
+	    		// pg = pg;
+	    		ptimeT = 0;
+	    		ptimePast = + new Date();
+	    		requestAnimationFrame(setrpBall);
+	    	}
+	    }
+
+	    function setrpBall() {
+	    	var ball = document.querySelector('#eleme'),
+	    	    ballY = ball.offsetTop,
+	    	    ballX = ball.offsetLeft;
+	    	ptimeT = ptimeT + ((+ new Date()) - ptimePast) / 1000;
+	    	pV = pV - pg * ptimeT;
+	    	peleY = pV * (+ new Date() - ptimePast) / 1000 / 2;
+	    	// eleY = timeT * (+ new Date() - timePast) / 1000 * g / 2;
+
+	    	if (pV <= 0) {
+	    		if (ballY - peleY + 30 < 600) {
+		    		ptimePast = + new Date();
+	    		    requestAnimationFrame(setpBall);
+	    		} else {
+	    			requestAnimationFrame(dball);
+	    		}
+	    	} else {
+
+	    		ball.style.top = ballY - peleY + 'px';
+	    		ball.style.left = ballX + pxV + 'px';
+	    		requestAnimationFrame(setrpBall);
+	    	}
+
+	    }
+
+	    function dball() {
+	    	pxV = pxV -0.01;
+	    	if (pxV > 0) {
+	    		requestAnimationFrame(dball);
+	    	}
+	    }
+
+
+      function removeClass() {
+        canvas.classList.remove('canvas-bottom');
+      }
+
+      requestAnimationFrame(setpBall);
+    </script>
+  </body>
+</html>

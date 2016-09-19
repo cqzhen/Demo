@@ -87,12 +87,11 @@
     });
 
     canvas.addEventListener('touchmove', function(e) {
-      console.log(567);
       e.preventDefault();
       for (var i = 0; i < e.changedTouches.length; i++) {
         var touch = e.changedTouches[i];
         if (touch.radiusX == null) {
-          if (touch.webkitRadiusX !== null) {
+          if (touch.webkitRadiusX != null) {
             touch.radiusX = touch.webkitRadiusX;
             touch.radiusY = touch.webkitRadiusY;
           } else {
@@ -126,7 +125,7 @@
         for (var wp = 100; wp < 200; wp += 20) {
           for (var hp = 95; hp < 110; hp += 10) {
             var imageData = cxt.getImageData(wp, hp, 1, 1).data;
-            if(imageData[0] !== 0 && imageData[1] !== 0 && imageData[2] !== 0 && imageData[3] !== 0) {
+            if(imageData[3] !== 0) {
               ++silverCount;
             }
           }
