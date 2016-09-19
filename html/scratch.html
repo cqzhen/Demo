@@ -64,68 +64,104 @@
     var canvasY = canvas.getBoundingClientRect().top;
     var areaWidth = canvas.width; // (document.body.clientWidth - canvas.width) / 2 + 100;
     var areaHeight = canvas.height; // 30 + 50;
-    var cxt = canvas.getContext('2d');
-    cxt.fillStyle = 'gray';
-    cxt.fillRect(0, 0, 300, 200);
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'gray';
+    ctx.fillRect(0, 0, 300, 200);
 
-    cxt.shadowColor = "red";
-    cxt.shadowBlur = 10;
-    cxt.globalCompositeOperation = 'destination-out';
-    cxt.lineCap = 'round';
+    ctx.shadowColor = "red";
+    ctx.shadowBlur = 10;
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.lineCap = 'round';
 
     var oldPoint = {};
+    var mouseDownCurrent = false;
 
-    canvas.addEventListener('touchstart', function(e) {
-      e.preventDefault();
-      for (var i = 0; i < e.changedTouches.length; i++) {
-        var touch = e.changedTouches[i];
-        oldPoint[touch.identifier] = {
-          x: touch.clientX - canvasX,
-          y: touch.clientY - canvasY
-        }
-      }
-    });
-
-    canvas.addEventListener('touchmove', function(e) {
-      e.preventDefault();
-      for (var i = 0; i < e.changedTouches.length; i++) {
-        var touch = e.changedTouches[i];
-        if (touch.radiusX == null) {
-          if (touch.webkitRadiusX != null) {
-            touch.radiusX = touch.webkitRadiusX;
-            touch.radiusY = touch.webkitRadiusY;
-          } else {
-            touch.radiusX = 12;
-            touch.radiusY = 12;
+    ['touchstart', 'mousedown'].forEach((eventName) => {
+      canvas.addEventListener(eventName, function(e) {
+        e.preventDefault();
+        // mouseenter 不符合要求，不考虑
+        if (eventName === 'mousedown') {
+          mouseDownCurrent = true;
+          oldPoint['mouseDown'] = {
+            x: e.clientX - canvasX,
+            y: e.clientY - canvasY
+          };
+        } else {
+          for (let i = 0; i < e.changedTouches.length; i++) {
+            const touch = e.changedTouches[i];
+            oldPoint[touch.identifier] = {
+              x: touch.clientX - canvasX,
+              y: touch.clientY - canvasY
+            };
           }
         }
-        with(cxt) {
-          var lastX = touch.clientX - canvasX,
-              lastY = touch.clientY - canvasY;
-          lineWidth = touch.radiusX + touch.radiusY;
-          beginPath();
-          var point = oldPoint[touch.identifier];
-          moveTo(point.x, point.y);
-          lineTo(lastX, lastY);
-          stroke();
-        }
-        // 每次移动point的x/y都会变化
-        point.x = lastX;
-        point.y = lastY;
-      }
+      });
     });
 
-    ['touchend', 'touchcancel'].forEach(function (eventName) {
+    ['touchmove', 'mousemove'].forEach((eventName) => {
+      canvas.addEventListener(eventName, function(e) {
+        e.preventDefault();
+        if (eventName === 'touchmove') {
+          for (var i = 0; i < e.changedTouches.length; i++) {
+            var touch = e.changedTouches[i];
+            if (touch.radiusX == null) {
+              if (touch.webkitRadiusX != null) {
+                touch.radiusX = touch.webkitRadiusX;
+                touch.radiusY = touch.webkitRadiusY;
+              } else {
+                touch.radiusX = 12;
+                touch.radiusY = 12;
+              }
+            }
+            with(ctx) {
+              var lastX = touch.clientX - canvasX,
+                  lastY = touch.clientY - canvasY;
+              lineWidth = touch.radiusX + touch.radiusY;
+              beginPath();
+              var point = oldPoint[touch.identifier];
+              moveTo(point.x, point.y);
+              lineTo(lastX, lastY);
+              stroke();
+            }
+            // 每次移动point的x/y都会变化
+            point.x = lastX;
+            point.y = lastY;
+          }
+        } else {
+          if (!mouseDownCurrent) return;
+          const lastX = e.clientX - canvasX;
+          const lastY = e.clientY - canvasY;
+          ctx.lineWidth = 24;
+          ctx.beginPath();
+          const point = oldPoint['mouseDown'];
+          ctx.moveTo(point.x, point.y);
+          ctx.lineTo(lastX, lastY);
+          ctx.stroke();
+          // 每次移动point的x/y都会变化
+          point.x = lastX;
+          point.y = lastY;
+        }
+
+      });
+    });
+
+    ['touchend', 'touchcancel', 'mouseup', 'mouseout'].forEach(function (eventName) {
       canvas.addEventListener(eventName, function (event) {
-        for (var i = 0; i < event.changedTouches.length; ++i) {
-          var touch = event.changedTouches[i];
-          delete oldPoint[touch.identifier];
+        if (eventName === 'mouseup' || eventName === 'mouseout') {
+          // 可以考虑下针对mouseout做下处理，这样焦点回到元素上还可以继续刮,兼容mouseenter
+          mouseDownCurrent = false;
+          delete oldPoint['mouseDown'];
+        } else {
+          for (var i = 0; i < event.changedTouches.length; ++i) {
+            var touch = event.changedTouches[i];
+            delete oldPoint[touch.identifier];
+          }
         }
         var silverCount = 0;
         for (var wp = 100; wp < 200; wp += 20) {
           for (var hp = 95; hp < 110; hp += 10) {
-            var imageData = cxt.getImageData(wp, hp, 1, 1).data;
-            if(imageData[0] !== 0 && imageData[1] !== 0 && imageData[2] !== 0 && imageData[3] !== 0) {
+            var imageData = ctx.getImageData(wp, hp, 1, 1).data;
+            if(imageData[3] !== 0) {
               ++silverCount;
             }
           }
