@@ -87,12 +87,11 @@
     });
 
     canvas.addEventListener('touchmove', function(e) {
-      console.log(567);
       e.preventDefault();
       for (var i = 0; i < e.changedTouches.length; i++) {
         var touch = e.changedTouches[i];
         if (touch.radiusX == null) {
-          if (touch.webkitRadiusX !== null) {
+          if (touch.webkitRadiusX != null) {
             touch.radiusX = touch.webkitRadiusX;
             touch.radiusY = touch.webkitRadiusY;
           } else {
