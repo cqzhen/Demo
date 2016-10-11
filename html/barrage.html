@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+  <head>
+    <title>弹幕 barrag</title>
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <meta charset="utf-8" />
+    <style type="text/css">
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        color: #fff;
+        font: 24px -apple-system,BlinkMacSystemFont,"Pingfang SC","Helvetica Neue",Helvetica,"Segoe UI",Verdana,Arial,STHeiti,"Microsoft Yahei",sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      ul {
+        position: relative;
+        flex: 0.8;
+        background: black;
+        overflow: hidden;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      li {
+        position: absolute;
+      }
+      form {
+        display: flex;
+        align-items: center;
+        margin: 8px 0 0;
+      }
+      input[type=text] {
+        flex: 1;
+      }
+      select {
+        margin: 0 8px;
+      }
+      @keyframes TopMove {
+        to {
+          transform: translateX(calc(-100vw - 100%))
+        }
+      }
+      @keyframes BottomCenter {
+        to { visibility: hidden }
+      }
+      li.top {
+        left: 100%;
+        top: 0;
+        animation: TopMove 4s linear forwards;
+        white-space:nowrap;
+      }
+      li.bottom {
+        width: 100%;
+        bottom: 0;
+        text-align: center;
+        animation: BottomCenter 3s linear forwards;
+      }
+    </style>
+  </head>
+  <body>
+    <ul>
+    </ul>
+    <form id="form">
+      <input type="text" name="text" required maxlength="50" />
+      <select>
+        <option value="Top">顶部弹幕</option>
+        <option value="Middle">中间弹幕</option>
+        <option value="Bottom">底部弹幕</option>
+      </select>
+    </form>
+    <script type="text/javascript">
+      'use strict';
+      document.getElementById('form').addEventListener('submit', function onSubmit(event) {
+        event.preventDefault();
+        var li = document.createElement('li');
+        li.textContent = this[0].value;
+        li.classList.add(this[1].value.toLowerCase());
+        this[0].value = '';
+
+        li.addEventListener('animationend', function () {
+          this.remove();
+        })
+
+        this.previousElementSibling.appendChild(li);
+      });
+    </script>
+  </body>
+</html>

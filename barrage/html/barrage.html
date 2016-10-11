@@ -1,0 +1,26 @@
+<!--
+  1. 弹幕实现简单字体
+ -->
+<!DOCTYPE html>
+  <head>
+    <title>弹幕 barrag</title>
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../css/project.css" />
+    <link rel="stylesheet" type="text/css" href="../css/barrage.css" />
+  </head>
+  <body>
+    <div id="barrage"></div>
+    <form id="form">
+      <input type="text" name="text" required maxlength="50" />
+      <select>
+        <option value="Top">顶部弹幕</option>
+        <option value="Middle">中间弹幕</option>
+        <option value="Bottom">底部弹幕</option>
+      </select>
+      <input type="color" name="color" value="#ffffff"/>
+    </form>
+    <script type="text/javascript" src="../js/config.json.js"></script>
+    <script type="text/javascript" src="../js/barrage.js"></script>
+  </body>
+</html>

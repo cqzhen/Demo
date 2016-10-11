@@ -1,6 +1,6 @@
 <!DOCTYPE html>
   <head>
-    <title>eleme html</title>
+    <title>eleme</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scal=1" />
   </head>
@@ -76,62 +76,73 @@
         // }
       }
 
-      // function setuBall() {
-	    //   var ballY = document.querySelector('#eleme').offsetTop;
-	    //   if (ballY < 600 - 30) {
-	    //   	document.querySelector('#eleme').style.top = ballY + 1 + 'px';
-	    //   	requestAnimationFrame(setuBall);
-	    //   }
-	    // }
-      var peleY = 0,
-        ptimeT = 0,
-        ptimePast = + new Date(),
-        pg = 9.8,
-        pxV = 3;
-        pV = 0;
+      var peleY = 0,  // 每次调用y轴行驶的距离  初始化0
+          ptimeT = 0,  // 时间 初始化0
+          ptimePast = + new Date(),  // 起始时间戳 初始化0
+          pg = 9.8,  // 重力加速度
+          pxV = 10,  //  x轴速度
+          pV = 0,
+          rquestT = 0.017;  //  y轴初始速度
 
       function setpBall() {
-
-	    	ptimeT = ptimeT + ((+ new Date()) - ptimePast) / 1000;
-	    	peleY = ptimeT * pg * (+ new Date() - ptimePast) / 1000 / 2; // eleY + 0.98;
+        // s = v * t;  v = g * t / 2;
 	    	var ball = document.querySelector('#eleme'),
-	    	    ballY = ball.offsetTop,
-	    	    ballX = ball.offsetLeft;
+	    	    ballY = ball.getBoundingClientRect().top,
+	    	    ballX = ball.getBoundingClientRect().left;
+            ptimeT = ptimeT + rquestT;
+
+        sAll = pg * ptimeT * ptimeT / 2 * 1000 ;
+
+        peleY = sAll;
 	    	if (ballY < 600 - 30) {
-	    		peleY = ballY + peleY > 600 -30 ? 600 -30 - ballY : peleY;
-	    		ball.style.top = ballY + peleY + 'px';
-	    		ball.style.left = ballX + pxV + 'px';
+	    		peleY = peleY > 600 -30 ? 600 -30 : peleY;
+	    		ball.style.top = peleY + 'px';
+	    		// ball.style.left = ballX + pxV + 'px';
 	    		requestAnimationFrame(setpBall);
 	    	} else {
-	    		pV = pg * ptimeT;
 	    		// pxV = pxV - 0.25;
-	    		// pg = pg;
+	    		pg = pg - 3;
+          pV = pg * ptimeT;
 	    		ptimeT = 0;
-	    		ptimePast = + new Date();
+	    		// ptimePast = + new Date();
 	    		requestAnimationFrame(setrpBall);
 	    	}
 	    }
 
 	    function setrpBall() {
+
+        ptimeT = ptimeT + rquestT; // t
+
 	    	var ball = document.querySelector('#eleme'),
 	    	    ballY = ball.offsetTop,
 	    	    ballX = ball.offsetLeft;
-	    	ptimeT = ptimeT + ((+ new Date()) - ptimePast) / 1000;
-	    	pV = pV - pg * ptimeT;
-	    	peleY = pV * (+ new Date() - ptimePast) / 1000 / 2;
+            // t = ((+ new Date()) - ptimePast) / 1000,
+            // pgv = ptimeT * pg,
+            // gv = pg * ptimeT;
+            // gs = gv * t,
+            // s = pV * t;
+
+
+            // currtentV = V - gt;  s = vt - (gtt/2);
+
+
+        s = pV * ptimeT;  // s = v * t;
+        gs = ptimeT * ptimeT * pg / 2;
+        peleY = (s - gs) * 1000;
 	    	// eleY = timeT * (+ new Date() - timePast) / 1000 * g / 2;
 
-	    	if (pV <= 0) {
+	    	if (pV - pg * ptimeT <= 0) {
+          pV = 0;
+          ptimeT = 0;
 	    		if (ballY - peleY + 30 < 600) {
-		    		ptimePast = + new Date();
-	    		    requestAnimationFrame(setpBall);
+	    		  requestAnimationFrame(setpBall);
 	    		} else {
 	    			requestAnimationFrame(dball);
 	    		}
 	    	} else {
-
-	    		ball.style.top = ballY - peleY + 'px';
-	    		ball.style.left = ballX + pxV + 'px';
+          ballY = ballY - peleY <= 0 ? 0 : ballY - peleY;
+	    		ball.style.top = ballY + 'px';
+	    		// ball.style.left = ballX + pxV + 'px';
 	    		requestAnimationFrame(setrpBall);
 	    	}
 

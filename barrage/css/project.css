@@ -1,0 +1,23 @@
+* {
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  font: 24px -apple-system,BlinkMacSystemFont,"Pingfang SC","Helvetica Neue",Helvetica,"Segoe UI",Verdana,Arial,STHeiti,"Microsoft Yahei",sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+#barrage {
+  position: relative;
+  flex: 0.8;
+  background: black;
+  margin: 0;
+  padding: 0;
+}
